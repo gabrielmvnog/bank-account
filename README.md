@@ -22,7 +22,7 @@ This project was a challenge from Pismo.
 
 ### Technologies
 
-- ☕ Java 8
+- ☕ Java 17
 - 🍃 Spring Boot
 - 🐋 Docker
 
