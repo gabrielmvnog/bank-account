@@ -4,6 +4,8 @@
   - [Sumary](#sumary)
   - [Getting Started](#getting-started)
     - [Technologies](#technologies)
+    - [Runing Locally](#runing-locally)
+    - [Unit Tests](#unit-tests)
   - [Model](#model)
     - [Rules](#rules)
   - [Endpoints](#endpoints)
@@ -23,6 +25,27 @@ This project was a challenge from Pismo.
 - ☕ Java 8
 - 🍃 Spring Boot
 - 🐋 Docker
+
+### Runing Locally
+
+[UPDATE THIS LATER]
+
+### Unit Tests
+
+This project was written with test-driven development methodology:
+
+1. Create test for the feature being developed. Run the test, it will fail.
+2. Write a small amout of the feature. Run the test, if fail, adjust the feature, if not go to step 3.
+3. After all tests passing, now it's possible to refactor.
+
+To run the unit tests locally, all you need to do is run:
+
+[UPDATE THIS LATER]
+
+```shell
+./gradlew test 
+```
+
 
 ## Model
 
@@ -127,5 +150,5 @@ sequenceDiagram
   - [ ] GET Account by ID
   - [ ] POST Transaction
 - [ ] Add Dockerfile
-- [ ] Add DockerCompose
-- [ ] 
+- [ ] Add Docker Compose
+- [ ] Add Git Workflow
