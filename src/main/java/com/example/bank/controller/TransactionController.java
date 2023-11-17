@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.bank.model.dto.AccountCreateResponseDto;
 import com.example.bank.model.dto.TransactionCreateRequestDto;
 import com.example.bank.model.dto.TransactionCreateResponseDto;
 import com.example.bank.service.TransactionService;
@@ -23,11 +22,11 @@ public class TransactionController {
 	@PostMapping
 	public ResponseEntity<?> createTransaction(@RequestBody TransactionCreateRequestDto transaction) {
 		try {
-			transactionService.createTransaction();
+			transactionService.createTransaction(transaction);
 			return new ResponseEntity<TransactionCreateResponseDto>(
 					TransactionCreateResponseDto.builder().id((long) 1).build(), HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

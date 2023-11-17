@@ -1,5 +1,8 @@
 package com.example.bank.service;
 
+import com.example.bank.model.dto.TransactionCreateRequestDto;
+import com.example.bank.model.dto.TransactionCreateResponseDto;
+
 public interface TransactionService {
-	public void createTransaction();
+	public TransactionCreateResponseDto createTransaction(TransactionCreateRequestDto transactionCreateRequestDto);
 }
