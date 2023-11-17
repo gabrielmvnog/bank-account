@@ -41,6 +41,13 @@ docker compose up
 
 And an container with the app and a postgresql will start.
 
+If everithing went well, you can access the Swagger at:
+
+http://localhost:8080/swagger-ui/index.html
+
+> ATTENTION:
+> The endpoints are security with a static token = `pismo123`
+
 ### Unit Tests
 
 This project was written with test-driven development methodology:

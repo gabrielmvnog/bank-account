@@ -22,7 +22,7 @@ import com.example.bank.service.TransactionService;
 
 @AutoConfigureJsonTesters
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class TransactionControllerTests {
 
 	@Autowired
