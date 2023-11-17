@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
 			throw e;
 		}
 
-		return AccountCreateResponseDto.builder().build();
+		return AccountCreateResponseDto.builder().id(account.getId()).build();
 	}
 
 	@Override
