@@ -88,6 +88,7 @@ erDiagram
 ## Endpoints
 
 ### POST /accounts
+
 ```mermaid
 sequenceDiagram
     Client->>+API: Request to create account
@@ -98,7 +99,12 @@ sequenceDiagram
         Note right of Client: 400 Bad Request
     end
 
-    API->>+Database: Insert data in Database    
+    API->>+Database: Insert data in Database
+    alt Account already exists
+        Database->>API: Error in insertion
+        API->>Client: Error response
+        Note right of Client: 409 Conflict
+    end    
     Database->>-API: Response about the insert    
 
     API->>-Client: Sucessfull response
@@ -106,12 +112,18 @@ sequenceDiagram
 ```
 
 ### GET /accounts/{account_id}
+
 ```mermaid
 sequenceDiagram
     Client->>+API: Request to retrieve an account
     Note right of Client: GET /accounts/{account_id}
 
-    API->>+Database: Query data in Database    
+    API->>+Database: Query data in Database
+    alt Account not found
+        Database->>API: Error in query
+        API->>Client: Error response
+        Note right of Client: 404 Not Found
+    end    
     Database->>-API: Response about the query    
 
     alt Account not found
@@ -124,6 +136,7 @@ sequenceDiagram
 ```
 
 ### POST /transactions
+
 ```mermaid
 sequenceDiagram
     Client->>+API: Request about a transaction
