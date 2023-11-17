@@ -27,7 +27,7 @@ import com.example.bank.service.AccountService;
 
 @AutoConfigureJsonTesters
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class AccountControllerTests {
 
 	@Autowired

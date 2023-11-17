@@ -17,8 +17,11 @@ import com.example.bank.model.dto.AccountCreateResponseDto;
 import com.example.bank.model.dto.AccountDto;
 import com.example.bank.service.AccountService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/accounts")
+@SecurityRequirement(name = "Authorization")
 public class AccountController {
 
 	@Autowired

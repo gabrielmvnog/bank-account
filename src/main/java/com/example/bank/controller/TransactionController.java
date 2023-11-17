@@ -13,8 +13,11 @@ import com.example.bank.model.dto.TransactionCreateRequestDto;
 import com.example.bank.model.dto.TransactionCreateResponseDto;
 import com.example.bank.service.TransactionService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/transactions")
+@SecurityRequirement(name = "Authorization")
 public class TransactionController {
 
 	@Autowired
