@@ -1,12 +1,11 @@
 package com.example.bank.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import java.util.Optional;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -59,4 +58,21 @@ public class AccountControllerTest {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 	}
 
+	@Test
+	public void givenGetRequest_whenCreating_thenShouldReturnOk() throws Exception {
+		MockHttpServletResponse response = mvc.perform(get("/accounts/123").contentType(MediaType.APPLICATION_JSON))
+				.andReturn().getResponse();
+
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+	}
+
+	@Test
+	public void givenGetRequest_whenCreating_thenShouldReturnInternalError() throws Exception {
+		when(accountService.getAccountById(anyInt())).thenThrow();
+
+		MockHttpServletResponse response = mvc.perform(get("/accounts/123").contentType(MediaType.APPLICATION_JSON))
+				.andReturn().getResponse();
+
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	}
 }
