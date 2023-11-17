@@ -22,9 +22,10 @@ public class TransactionController {
 	@PostMapping
 	public ResponseEntity<?> createTransaction(@RequestBody TransactionCreateRequestDto transaction) {
 		try {
-			transactionService.createTransaction(transaction);
-			return new ResponseEntity<TransactionCreateResponseDto>(
-					TransactionCreateResponseDto.builder().id((long) 1).build(), HttpStatus.CREATED);
+			TransactionCreateResponseDto transactionCreateResponseDto = transactionService
+					.createTransaction(transaction);
+
+			return new ResponseEntity<TransactionCreateResponseDto>(transactionCreateResponseDto, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}

@@ -1,6 +1,7 @@
 package com.example.bank.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.bank.exception.ConflictException;
+import com.example.bank.exception.NotFoundException;
 import com.example.bank.model.dto.AccountCreateRequestDto;
 import com.example.bank.service.AccountService;
 
@@ -48,6 +51,18 @@ public class AccountControllerTests {
 	}
 
 	@Test
+	public void givenPostRequest_whenCreating_thenShouldReturnConflict() throws Exception {
+		when(accountService.createAccount(any(AccountCreateRequestDto.class))).thenThrow(ConflictException.class);
+
+		AccountCreateRequestDto data = AccountCreateRequestDto.builder().documentNumber("123").build();
+		MockHttpServletResponse response = mvc.perform(
+				post("/accounts").contentType(MediaType.APPLICATION_JSON).content(jsonAccount.write(data).getJson()))
+				.andReturn().getResponse();
+
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
+	}
+
+	@Test
 	public void givenPostRequest_whenCreating_thenShouldReturnInternalError() throws Exception {
 		doThrow().when(accountService);
 
@@ -60,15 +75,25 @@ public class AccountControllerTests {
 	}
 
 	@Test
-	public void givenGetRequest_whenCreating_thenShouldReturnOk() throws Exception {
+	public void givenGetRequest_whenGetting_thenShouldReturnOk() throws Exception {
 		MockHttpServletResponse response = mvc.perform(get("/accounts/123").contentType(MediaType.APPLICATION_JSON))
 				.andReturn().getResponse();
 
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
-
+	
 	@Test
-	public void givenGetRequest_whenCreating_thenShouldReturnInternalError() throws Exception {
+	public void givenGetRequest_whenAccountNotFound_thenShouldReturnNotFound() throws Exception {
+		when(accountService.getAccountById(anyLong())).thenThrow(NotFoundException.class);
+
+		MockHttpServletResponse response = mvc.perform(get("/accounts/123").contentType(MediaType.APPLICATION_JSON))
+				.andReturn().getResponse();
+
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+	}
+	
+	@Test
+	public void givenGetRequest_whenError_thenShouldReturnInternalError() throws Exception {
 		when(accountService.getAccountById(anyLong())).thenThrow();
 
 		MockHttpServletResponse response = mvc.perform(get("/accounts/123").contentType(MediaType.APPLICATION_JSON))
