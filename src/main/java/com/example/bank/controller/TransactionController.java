@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bank.exception.UnprocessableEntityException;
 import com.example.bank.model.dto.TransactionCreateRequestDto;
 import com.example.bank.model.dto.TransactionCreateResponseDto;
 import com.example.bank.service.TransactionService;
@@ -26,6 +27,8 @@ public class TransactionController {
 					.createTransaction(transaction);
 
 			return new ResponseEntity<TransactionCreateResponseDto>(transactionCreateResponseDto, HttpStatus.CREATED);
+		} catch (UnprocessableEntityException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
