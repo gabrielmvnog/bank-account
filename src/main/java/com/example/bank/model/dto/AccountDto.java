@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDto {
-	private String id;
+	private Long id;
 	private String documentNumber;
 }
