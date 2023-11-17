@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionCreateResponseDto {
-	private String id;
+	private Long id;
 }

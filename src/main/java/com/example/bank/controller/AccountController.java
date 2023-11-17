@@ -26,20 +26,20 @@ public class AccountController {
 	public ResponseEntity<?> createAccount(@RequestBody AccountCreateRequestDto account) {
 		try {
 			accountService.createAccount(account);
-			return new ResponseEntity<AccountCreateResponseDto>(AccountCreateResponseDto.builder().id("1").build(),
+			return new ResponseEntity<AccountCreateResponseDto>(AccountCreateResponseDto.builder().id((long) 1).build(),
 					HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping("/{accountId}")
-	public ResponseEntity<?> getAccountById(@PathVariable int accountId) {
+	public ResponseEntity<?> getAccountById(@PathVariable Long accountId) {
 		try {
 			AccountDto data = accountService.getAccountById(accountId);
 			return new ResponseEntity<AccountDto>(data, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

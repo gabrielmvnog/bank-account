@@ -1,11 +1,12 @@
 package com.example.bank.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -68,7 +69,7 @@ public class AccountControllerTests {
 
 	@Test
 	public void givenGetRequest_whenCreating_thenShouldReturnInternalError() throws Exception {
-		when(accountService.getAccountById(anyInt())).thenThrow();
+		when(accountService.getAccountById(anyLong())).thenThrow();
 
 		MockHttpServletResponse response = mvc.perform(get("/accounts/123").contentType(MediaType.APPLICATION_JSON))
 				.andReturn().getResponse();

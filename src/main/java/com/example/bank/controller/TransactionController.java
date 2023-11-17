@@ -25,7 +25,7 @@ public class TransactionController {
 		try {
 			transactionService.createTransaction();
 			return new ResponseEntity<TransactionCreateResponseDto>(
-					TransactionCreateResponseDto.builder().id("1").build(), HttpStatus.CREATED);
+					TransactionCreateResponseDto.builder().id((long) 1).build(), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
