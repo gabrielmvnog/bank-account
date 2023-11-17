@@ -25,10 +25,21 @@ This project was a challenge from Pismo.
 - ☕ Java 17
 - 🍃 Spring Boot
 - 🐋 Docker
+- 📦 Gradle
 
 ### Runing Locally
 
-[UPDATE THIS LATER]
+> It's important to have Docker installed in the local machine to run this project,
+> if you don't have this yet, please take a look at the official docker site
+> to install: [Docker Oficial Install Guide](https://docs.docker.com/engine/install/) 
+
+With docker installed, to run it is pretty simple, you only need to run:
+
+```shell
+docker compose up
+```
+
+And an container with the app and a postgresql will start.
 
 ### Unit Tests
 
@@ -40,12 +51,9 @@ This project was written with test-driven development methodology:
 
 To run the unit tests locally, all you need to do is run:
 
-[UPDATE THIS LATER]
-
 ```shell
 ./gradlew test 
 ```
-
 
 ## Model
 
@@ -56,7 +64,7 @@ erDiagram
         string documentNumber
     }
 
-    Account ||--o| Transactions: has
+    Account ||--o{ Transactions: has
 
     Transactions {
         uuid id
@@ -142,6 +150,11 @@ sequenceDiagram
     Client->>+API: Request about a transaction
     Note right of Client: POST /transactions
 
+    alt Invalid transaction
+        API->>Client: Error response
+        Note right of Client: 422 Unprocessable Entity
+    end
+
     alt Invalid transaction data
         API->>Client: Error response
         Note right of Client: 400 Bad Request
@@ -156,12 +169,12 @@ sequenceDiagram
 
 ## TODOs
 
-- [ ] Write the README
+- [X] Write the README
 - [ ] Add Security Layer
-- [ ] Create Endpoints
-  - [ ] POST Account
-  - [ ] GET Account by ID
-  - [ ] POST Transaction
-- [ ] Add Dockerfile
-- [ ] Add Docker Compose
+- [X] Create Endpoints
+  - [X] POST Account
+  - [X] GET Account by ID
+  - [X] POST Transaction
+- [X] Add Dockerfile
+- [X] Add Docker Compose
 - [ ] Add Git Workflow
