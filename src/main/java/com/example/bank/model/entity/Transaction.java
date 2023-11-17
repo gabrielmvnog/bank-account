@@ -30,7 +30,7 @@ public class Transaction {
 	private Long accountId;
 
 	@Column(name = "operation_type", nullable = false, updatable = false)
-	private int operationType;
+	private Long operationType;
 
 	@Column(name = "amount", nullable = false, updatable = false)
 	private double amount;

@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransactionCreateRequestDto {
 	private Long accountId;
-	private int operationType;
+	private Long operationType;
 	private double amount;
 }
