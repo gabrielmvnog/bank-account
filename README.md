@@ -1,3 +1,5 @@
+![](/badges/jacoco.svg)
+
 # Bank Account
 
 - [Bank Account](#bank-account)
@@ -173,15 +175,3 @@ sequenceDiagram
     API->>-Client: Sucessfull response
     Note right of Client: 201 Created
 ```
-
-## TODOs
-
-- [X] Write the README
-- [ ] Add Security Layer
-- [X] Create Endpoints
-  - [X] POST Account
-  - [X] GET Account by ID
-  - [X] POST Transaction
-- [X] Add Dockerfile
-- [X] Add Docker Compose
-- [ ] Add Git Workflow
