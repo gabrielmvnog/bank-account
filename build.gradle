@@ -44,13 +44,29 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+test {
+    finalizedBy jacocoTestReport
+}
+
 jacocoTestReport {
     dependsOn test
     sourceSets sourceSets.main
     executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
     reports {
+		csv.required = true
         html.destination file("${buildDir}/reports/jacoco/Html")
         csv.destination file("${buildDir}/reports/jacoco/jacoco.csv")
+    }
+  
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                "com/example/**/entity/**",
+                "com/example/**/dto/**",
+                "com/example/**/*Enum.*",
+                "**/config/*"
+            ])
+        }))
     }
 }
 
