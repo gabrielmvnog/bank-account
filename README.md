@@ -14,7 +14,6 @@
     - [POST /accounts](#post-accounts)
     - [GET /accounts/{account\_id}](#get-accountsaccount_id)
     - [POST /transactions](#post-transactions)
-  - [TODOs](#todos)
 
 ## Sumary
 
@@ -83,7 +82,7 @@ erDiagram
         datetime eventDate
     }
 
-    Transactions ||--|| "Operations Type": has
+    Transactions }|--|| "Operations Type": has
 
     "Operations Type" {
         int id
