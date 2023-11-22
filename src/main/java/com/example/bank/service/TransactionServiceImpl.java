@@ -14,6 +14,9 @@ import com.example.bank.model.entity.Transaction;
 import com.example.bank.repository.OperationTypeRepository;
 import com.example.bank.repository.TransactionRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -33,6 +36,10 @@ public class TransactionServiceImpl implements TransactionService {
 						&& transactionCreateRequestDto.getAmount() < 0)
 				|| (!operationType.get().getDescription().equals(OperationTypeEnum.PAYMENT)
 						&& transactionCreateRequestDto.getAmount() > 0)) {
+
+			log.warn("Can not proccess operation: " + operationType.toString() + " for transaction: "
+					+ transactionCreateRequestDto.toString());
+
 			throw new UnprocessableEntityException("Unprocesable operation type");
 		}
 
@@ -41,6 +48,8 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public TransactionCreateResponseDto createTransaction(TransactionCreateRequestDto transactionCreateRequestDto)
 			throws UnprocessableEntityException {
+		log.debug("Creating transaction with payload: " + transactionCreateRequestDto.toString());
+
 		processOperation(transactionCreateRequestDto);
 
 		Transaction transaction = Transaction.builder().accountId(transactionCreateRequestDto.getAccountId())
@@ -48,6 +57,8 @@ public class TransactionServiceImpl implements TransactionService {
 				.amount(transactionCreateRequestDto.getAmount()).build();
 
 		transactionRepository.save(transaction);
+
+		log.debug("Successfully created transcation: " + transactionCreateRequestDto.toString());
 
 		return TransactionCreateResponseDto.builder().id(transaction.getId()).build();
 	}
