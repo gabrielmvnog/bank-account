@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -16,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.bank.model.dto.AccountCreateRequestDto;
 import com.example.bank.model.dto.TransactionCreateRequestDto;
 import com.example.bank.service.TransactionService;
 
@@ -36,7 +37,8 @@ public class TransactionControllerTests {
 
 	@Test
 	public void givenPostRequest_whenCreating_thenShouldReturnCreated() throws Exception {
-		TransactionCreateRequestDto data = TransactionCreateRequestDto.builder().build();
+		TransactionCreateRequestDto data = TransactionCreateRequestDto.builder().accountId((long) 1)
+				.amount(new BigDecimal("1.00")).operationType((long) 1).build();
 
 		MockHttpServletResponse response = mvc.perform(post("/transactions").contentType(MediaType.APPLICATION_JSON)
 				.content(jsonTransaction.write(data).getJson())).andReturn().getResponse();
@@ -48,7 +50,8 @@ public class TransactionControllerTests {
 	public void givenPostRequest_whenCreating_thenShouldReturnInternalError() throws Exception {
 		doThrow().when(transactionService);
 
-		TransactionCreateRequestDto data = TransactionCreateRequestDto.builder().build();
+		TransactionCreateRequestDto data = TransactionCreateRequestDto.builder().accountId((long) 1)
+				.amount(new BigDecimal("1.00")).operationType((long) 1).build();
 		MockHttpServletResponse response = mvc.perform(post("/transactions").contentType(MediaType.APPLICATION_JSON)
 				.content(jsonTransaction.write(data).getJson())).andReturn().getResponse();
 

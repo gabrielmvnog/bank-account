@@ -41,7 +41,7 @@ public class AccountControllerTests {
 
 	@Test
 	public void givenPostRequest_whenCreating_thenShouldReturnCreated() throws Exception {
-		AccountCreateRequestDto data = AccountCreateRequestDto.builder().documentNumber("123").build();
+		AccountCreateRequestDto data = AccountCreateRequestDto.builder().documentNumber("54338808412").build();
 
 		MockHttpServletResponse response = mvc.perform(
 				post("/accounts").contentType(MediaType.APPLICATION_JSON).content(jsonAccount.write(data).getJson()))
@@ -54,7 +54,7 @@ public class AccountControllerTests {
 	public void givenPostRequest_whenCreating_thenShouldReturnConflict() throws Exception {
 		when(accountService.createAccount(any(AccountCreateRequestDto.class))).thenThrow(ConflictException.class);
 
-		AccountCreateRequestDto data = AccountCreateRequestDto.builder().documentNumber("123").build();
+		AccountCreateRequestDto data = AccountCreateRequestDto.builder().documentNumber("54338808412").build();
 		MockHttpServletResponse response = mvc.perform(
 				post("/accounts").contentType(MediaType.APPLICATION_JSON).content(jsonAccount.write(data).getJson()))
 				.andReturn().getResponse();
@@ -66,7 +66,7 @@ public class AccountControllerTests {
 	public void givenPostRequest_whenCreating_thenShouldReturnInternalError() throws Exception {
 		doThrow().when(accountService);
 
-		AccountCreateRequestDto data = AccountCreateRequestDto.builder().documentNumber("123").build();
+		AccountCreateRequestDto data = AccountCreateRequestDto.builder().documentNumber("54338808412").build();
 		MockHttpServletResponse response = mvc.perform(
 				post("/accounts").contentType(MediaType.APPLICATION_JSON).content(jsonAccount.write(data).getJson()))
 				.andReturn().getResponse();

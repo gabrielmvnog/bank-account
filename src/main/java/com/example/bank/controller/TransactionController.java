@@ -15,6 +15,7 @@ import com.example.bank.model.dto.TransactionCreateResponseDto;
 import com.example.bank.service.TransactionService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/transactions")
@@ -25,7 +26,7 @@ public class TransactionController {
 	private TransactionService transactionService;
 
 	@PostMapping
-	public ResponseEntity<?> createTransaction(@RequestBody TransactionCreateRequestDto transaction) {
+	public ResponseEntity<?> createTransaction(@Valid @RequestBody TransactionCreateRequestDto transaction) {
 		try {
 			TransactionCreateResponseDto transactionCreateResponseDto = transactionService
 					.createTransaction(transaction);
