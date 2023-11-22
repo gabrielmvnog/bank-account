@@ -1,14 +1,14 @@
 package com.example.bank.model.entity;
 
-import org.springframework.data.annotation.CreatedDate;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Transaction {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "account_id", nullable = false, updatable = false)
@@ -35,7 +35,7 @@ public class Transaction {
 	@Column(name = "amount", nullable = false, updatable = false)
 	private double amount;
 
-	@CreatedDate
-	@Column(name = "eventDate")
-	private String eventDate;
+	@CreationTimestamp
+	@Column(name = "event_date")
+	private LocalDateTime eventDate;
 }
