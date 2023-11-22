@@ -18,19 +18,30 @@ import com.example.bank.model.dto.AccountCreateResponseDto;
 import com.example.bank.model.dto.AccountDto;
 import com.example.bank.service.AccountService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/accounts")
 @SecurityRequirement(name = "Authorization")
+@Tag(name = "account", description = "Manage accounts")
 public class AccountController {
 
 	@Autowired
 	private AccountService accountService;
 
-	@PostMapping
-	public ResponseEntity<?> createAccount(@Valid @RequestBody AccountCreateRequestDto account) {
+	@Operation(summary = "Add a new account", description = "Add a new account")
+	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Created", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = AccountCreateResponseDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "Bad Request") })
+	@PostMapping(consumes = { "application/json" })
+	public ResponseEntity<AccountCreateResponseDto> createAccount(@Valid @RequestBody AccountCreateRequestDto account) {
 		try {
 			AccountCreateResponseDto accountCreateResponseDto = accountService.createAccount(account);
 
@@ -42,8 +53,13 @@ public class AccountController {
 		}
 	}
 
+	@Operation(summary = "Retrieve a account by id", description = "Retrieve a account by id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Ok", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = AccountDto.class)) }),
+			@ApiResponse(responseCode = "404", description = "Not Found") })
 	@GetMapping("/{accountId}")
-	public ResponseEntity<?> getAccountById(@PathVariable Long accountId) {
+	public ResponseEntity<AccountDto> getAccountById(@PathVariable Long accountId) {
 		try {
 			AccountDto accountDto = accountService.getAccountById(accountId);
 			return new ResponseEntity<AccountDto>(accountDto, HttpStatus.OK);
