@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.bank.exception.ConflictException;
 import com.example.bank.exception.NotFoundException;
@@ -34,9 +35,9 @@ public class AccountController {
 
 			return new ResponseEntity<AccountCreateResponseDto>(accountCreateResponseDto, HttpStatus.CREATED);
 		} catch (ConflictException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.CONFLICT);
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		} catch (Exception e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
@@ -46,9 +47,9 @@ public class AccountController {
 			AccountDto accountDto = accountService.getAccountById(accountId);
 			return new ResponseEntity<AccountDto>(accountDto, HttpStatus.OK);
 		} catch (NotFoundException e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		} catch (Exception e) {
-			return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
