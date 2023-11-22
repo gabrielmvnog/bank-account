@@ -1,5 +1,6 @@
 package com.example.bank.model.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,7 +34,7 @@ public class Transaction {
 	private Long operationType;
 
 	@Column(name = "amount", nullable = false, updatable = false)
-	private double amount;
+	private BigDecimal amount;
 
 	@CreationTimestamp
 	@Column(name = "event_date")

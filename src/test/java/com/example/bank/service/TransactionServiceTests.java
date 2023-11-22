@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class TranscationServiceTests {
 	public void givenCreateTranscation_whenCreating_thenShouldReturnIdentifier() throws Exception {
 		when(operationTypeRepository.findById((long) 1)).thenReturn(Optional.ofNullable(OperationType.builder().id((long) 1).description(OperationTypeEnum.PAYMENT).build()));
 		
-		TransactionCreateRequestDto transactionCreateRequestDto = TransactionCreateRequestDto.builder().operationType((long) 1).build();
+		TransactionCreateRequestDto transactionCreateRequestDto = TransactionCreateRequestDto.builder().amount(new BigDecimal("10.00")).operationType((long) 1).build();
 
 		TransactionCreateResponseDto transactionCreateResponseDto = transactionService
 				.createTransaction(transactionCreateRequestDto);
@@ -47,7 +48,7 @@ class TranscationServiceTests {
 	public void givenInvalidAmount_whenCreating_thenShouldReturnUnprocessable() throws Exception {
 		when(operationTypeRepository.findById((long) 1)).thenReturn(Optional.ofNullable(OperationType.builder().id((long) 1).description(OperationTypeEnum.PAYMENT).build()));
 		
-		TransactionCreateRequestDto transactionCreateRequestDto = TransactionCreateRequestDto.builder().amount(-10.00).operationType((long) 1).build();
+		TransactionCreateRequestDto transactionCreateRequestDto = TransactionCreateRequestDto.builder().amount(new BigDecimal("-10.00")).operationType((long) 1).build();
 
 		Exception exception = assertThrows(UnprocessableEntityException.class, () -> {
 			transactionService

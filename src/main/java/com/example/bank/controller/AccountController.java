@@ -19,6 +19,7 @@ import com.example.bank.model.dto.AccountDto;
 import com.example.bank.service.AccountService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/accounts")
@@ -29,7 +30,7 @@ public class AccountController {
 	private AccountService accountService;
 
 	@PostMapping
-	public ResponseEntity<?> createAccount(@RequestBody AccountCreateRequestDto account) {
+	public ResponseEntity<?> createAccount(@Valid @RequestBody AccountCreateRequestDto account) {
 		try {
 			AccountCreateResponseDto accountCreateResponseDto = accountService.createAccount(account);
 

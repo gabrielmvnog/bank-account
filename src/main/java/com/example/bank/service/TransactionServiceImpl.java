@@ -1,5 +1,6 @@
 package com.example.bank.service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,11 @@ public class TransactionServiceImpl implements TransactionService {
 		Optional<OperationType> operationType = operationTypeRepository
 				.findById(transactionCreateRequestDto.getOperationType());
 
+		int compared = transactionCreateRequestDto.getAmount().compareTo(new BigDecimal("0.0"));
+
 		if ((operationType.isEmpty())
-				|| (operationType.get().getDescription().equals(OperationTypeEnum.PAYMENT)
-						&& transactionCreateRequestDto.getAmount() < 0)
-				|| (!operationType.get().getDescription().equals(OperationTypeEnum.PAYMENT)
-						&& transactionCreateRequestDto.getAmount() > 0)) {
+				|| (operationType.get().getDescription().equals(OperationTypeEnum.PAYMENT) && compared < 0)
+				|| (!operationType.get().getDescription().equals(OperationTypeEnum.PAYMENT) && compared > 0)) {
 
 			log.warn("Can not proccess operation: " + operationType.toString() + " for transaction: "
 					+ transactionCreateRequestDto.toString());
