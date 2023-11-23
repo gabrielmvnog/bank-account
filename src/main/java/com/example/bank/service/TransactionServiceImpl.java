@@ -72,11 +72,13 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public List<TransactionDto> query(int offset, int limit) {
-		Pageable pageable = PageRequest.of(0, 10);
-
+		Pageable pageable = PageRequest.of(offset, limit);
 		List<Transaction> allTransactions = transactionRepository.findAll(pageable).getContent();
 
-		return allTransactions.stream().map(transaction -> TransactionDto.builder().build())
+		return allTransactions.stream()
+				.map(transaction -> TransactionDto.builder().id(transaction.getId())
+						.accountId(transaction.getAccountId()).operationType(transaction.getOperationType())
+						.amount(transaction.getAmount()).build())
 				.collect(Collectors.toList());
 	}
 

@@ -1,10 +1,15 @@
 package com.example.bank.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.bank.model.dto.TransactionCreateRequestDto;
+import com.example.bank.model.dto.TransactionDto;
 import com.example.bank.service.TransactionService;
 
 @AutoConfigureJsonTesters
@@ -34,6 +40,7 @@ public class TransactionControllerTests {
 
 	@Autowired
 	private JacksonTester<TransactionCreateRequestDto> jsonTransaction;
+
 
 	@Test
 	public void givenPostRequest_whenCreating_thenShouldReturnCreated() throws Exception {
@@ -58,4 +65,17 @@ public class TransactionControllerTests {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 	}
 
+	@Test
+	public void givenGet_whenQuerying_thenShouldReturnAccountList() throws Exception {
+		TransactionDto transaction = TransactionDto.builder().accountId((long) 1).amount(new BigDecimal("1.00"))
+				.operationType((long) 1).build();
+		List<TransactionDto> data = new ArrayList<TransactionDto>();
+		data.add(transaction);
+
+		when(transactionService.query(anyInt(), anyInt())).thenReturn(data);
+
+		MockHttpServletResponse response = mvc.perform(get("/transactions")).andReturn().getResponse();
+
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+	}
 }
