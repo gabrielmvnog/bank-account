@@ -1,15 +1,21 @@
 package com.example.bank.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import com.example.bank.exception.UnprocessableEntityException;
 import com.example.bank.model.OperationTypeEnum;
 import com.example.bank.model.dto.TransactionCreateRequestDto;
 import com.example.bank.model.dto.TransactionCreateResponseDto;
+import com.example.bank.model.dto.TransactionDto;
 import com.example.bank.model.entity.OperationType;
 import com.example.bank.model.entity.Transaction;
 import com.example.bank.repository.OperationTypeRepository;
@@ -62,6 +68,16 @@ public class TransactionServiceImpl implements TransactionService {
 		log.debug("Successfully created transcation: " + transactionCreateRequestDto.toString());
 
 		return TransactionCreateResponseDto.builder().id(transaction.getId()).build();
+	}
+
+	@Override
+	public List<TransactionDto> query(int offset, int limit) {
+		Pageable pageable = PageRequest.of(0, 10);
+
+		List<Transaction> allTransactions = transactionRepository.findAll(pageable).getContent();
+
+		return allTransactions.stream().map(transaction -> TransactionDto.builder().build())
+				.collect(Collectors.toList());
 	}
 
 }
