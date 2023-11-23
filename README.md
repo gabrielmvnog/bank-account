@@ -14,6 +14,7 @@
     - [POST /accounts](#post-accounts)
     - [GET /accounts/{account\_id}](#get-accountsaccount_id)
     - [POST /transactions](#post-transactions)
+    - [GET /transactions](#get-transactions)
 
 ## Sumary
 
@@ -173,4 +174,18 @@ sequenceDiagram
 
     API->>-Client: Sucessfull response
     Note right of Client: 201 Created
+```
+
+### GET /transactions
+
+```mermaid
+sequenceDiagram
+    Client->>+API: Request a list of transactions
+    Note right of Client: GET /transactions
+
+    API->>+Database: Query in Database    
+    Database->>-API: Response about the query    
+
+    API->>-Client: Sucessfull response
+    Note right of Client: 200 Ok
 ```

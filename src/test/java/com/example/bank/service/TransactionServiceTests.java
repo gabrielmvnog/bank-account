@@ -75,7 +75,7 @@ class TranscationServiceTests {
 
 		when(transactionRepository.findAll(any(Pageable.class))).thenReturn(pagedResponse);
 
-		List<TransactionDto> transactionsList = transactionService.query(10, 0);
+		List<TransactionDto> transactionsList = transactionService.query(0, 10);
 
 		assertThat(transactionsList).hasAtLeastOneElementOfType(TransactionDto.class);
 	}
@@ -87,7 +87,7 @@ class TranscationServiceTests {
 
 		when(transactionRepository.findAll(any(Pageable.class))).thenReturn(pagedResponse);
 
-		List<TransactionDto> transactionsList = transactionService.query(10, 0);
+		List<TransactionDto> transactionsList = transactionService.query(0, 10);
 
 		assertThat(transactionsList).isEmpty();
 	}
