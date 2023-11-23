@@ -1,5 +1,6 @@
 package com.example.bank.model.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnTransformer;
@@ -41,6 +42,9 @@ public class Account {
 			""")
 	@Column(name = "document_number", unique = true, nullable = false, updatable = false, columnDefinition = "bytea")
 	private String documentNumber;
+
+	@Column(name = "available_credit_limit", nullable = false)
+	private BigDecimal availableCreditLimit;
 
 	@PrePersist
 	private void fillHashedDocumentNumber() {

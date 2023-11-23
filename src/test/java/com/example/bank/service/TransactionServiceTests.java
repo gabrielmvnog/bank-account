@@ -23,8 +23,10 @@ import com.example.bank.model.OperationTypeEnum;
 import com.example.bank.model.dto.TransactionCreateRequestDto;
 import com.example.bank.model.dto.TransactionCreateResponseDto;
 import com.example.bank.model.dto.TransactionDto;
+import com.example.bank.model.entity.Account;
 import com.example.bank.model.entity.OperationType;
 import com.example.bank.model.entity.Transaction;
+import com.example.bank.repository.AccountRepository;
 import com.example.bank.repository.OperationTypeRepository;
 import com.example.bank.repository.TransactionRepository;
 
@@ -37,14 +39,18 @@ class TranscationServiceTests {
 	@MockBean
 	private OperationTypeRepository operationTypeRepository;
 
+	@MockBean
+	private AccountRepository accountRepository;
+
 	@Autowired
 	private TransactionService transactionService;
 
 	@Test
 	public void givenCreateTranscation_whenCreating_thenShouldReturnIdentifier() throws Exception {
 		when(operationTypeRepository.findById((long) 1)).thenReturn(Optional.ofNullable(OperationType.builder().id((long) 1).description(OperationTypeEnum.PAYMENT).build()));
+		when(accountRepository.findById((long) 1)).thenReturn(Optional.ofNullable(Account.builder().id((long) 1).availableCreditLimit(new BigDecimal("5.00")).build()));
 		
-		TransactionCreateRequestDto transactionCreateRequestDto = TransactionCreateRequestDto.builder().amount(new BigDecimal("10.00")).operationType((long) 1).build();
+		TransactionCreateRequestDto transactionCreateRequestDto = TransactionCreateRequestDto.builder().accountId((long) 1).amount(new BigDecimal("10.00")).operationType((long) 1).build();
 
 		TransactionCreateResponseDto transactionCreateResponseDto = transactionService
 				.createTransaction(transactionCreateRequestDto);
@@ -64,6 +70,21 @@ class TranscationServiceTests {
 		});
 
 		assertThat(exception.getMessage()).isEqualTo("Unprocesable operation type");
+	}
+
+	@Test
+	public void givenWithdrown_whenLimitIsNotEnought_thenShouldReturnUnprocessable() throws Exception {
+		when(operationTypeRepository.findById((long) 1)).thenReturn(Optional.ofNullable(OperationType.builder().id((long) 1).description(OperationTypeEnum.WITHDRAW).build()));
+		when(accountRepository.findById((long) 1)).thenReturn(Optional.ofNullable(Account.builder().id((long) 1).availableCreditLimit(new BigDecimal("5.00")).build()));
+		
+		TransactionCreateRequestDto transactionCreateRequestDto = TransactionCreateRequestDto.builder().accountId((long) 1).amount(new BigDecimal("-10.00")).operationType((long) 1).build();
+
+		Exception exception = assertThrows(UnprocessableEntityException.class, () -> {
+			transactionService
+			.createTransaction(transactionCreateRequestDto);
+		});
+
+		assertThat(exception.getMessage()).isEqualTo("Unprocesable transaction, limit not enought");
 	}
 
 	@Test

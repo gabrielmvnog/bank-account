@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS account (
   id SERIAL PRIMARY KEY,
   document_number BYTEA,
   hashed_document_number BYTEA NOT NULL UNIQUE,
+  available_credit_limit DECIMAL NOT NULL,
   created_at TIMESTAMPTZ NOT NULL
 );
 
