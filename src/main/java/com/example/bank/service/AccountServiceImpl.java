@@ -27,7 +27,8 @@ public class AccountServiceImpl implements AccountService {
 	public AccountCreateResponseDto createAccount(AccountCreateRequestDto accountCreateRequestDto) throws Exception {
 		log.debug("Creating account with payload: " + accountCreateRequestDto.toString());
 
-		Account account = Account.builder().documentNumber(accountCreateRequestDto.getDocumentNumber()).build();
+		Account account = Account.builder().documentNumber(accountCreateRequestDto.getDocumentNumber())
+				.availableCreditLimit(accountCreateRequestDto.getAvailableCreditLimit()).build();
 
 		try {
 			accountRepository.save(account);
@@ -61,6 +62,7 @@ public class AccountServiceImpl implements AccountService {
 
 		log.debug("Successfully queried account with id: " + accountId.toString());
 
-		return AccountDto.builder().id(account.get().getId()).documentNumber(account.get().getDocumentNumber()).build();
+		return AccountDto.builder().id(account.get().getId()).documentNumber(account.get().getDocumentNumber())
+				.availableCreditLimit(account.get().getAvailableCreditLimit()).build();
 	}
 }

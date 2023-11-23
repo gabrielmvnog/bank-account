@@ -143,13 +143,8 @@ sequenceDiagram
     end    
     Database->>-API: Response about the query    
 
-    alt Account not found
-        API->>Client: Error response
-        Note right of Client: 404 Not Found
-    end
-
     API->>-Client: Sucessfull response
-    Note right of Client: 201 Created
+    Note right of Client: 200 Ok
 ```
 
 ### POST /transactions
@@ -159,18 +154,25 @@ sequenceDiagram
     Client->>+API: Request about a transaction
     Note right of Client: POST /transactions
 
-    alt Invalid transaction
-        API->>Client: Error response
-        Note right of Client: 422 Unprocessable Entity
-    end
-
     alt Invalid transaction data
         API->>Client: Error response
         Note right of Client: 400 Bad Request
     end
 
-    API->>+Database: Insert data in Database    
-    Database->>-API: Response about the insert    
+    alt Invalid transaction operation
+        API->>Client: Error response
+        Note right of Client: 422 Unprocessable Entity
+    end
+
+    alt Account have limit
+        API->>Client: Error response
+        Note right of Client: 422 Unprocessable Entity
+    end
+
+    API->>+Database: Insert data in Database
+    API->>+Database: Update account availableCreditLimit in Database
+
+    Database->>-API: Response about the database    
 
     API->>-Client: Sucessfull response
     Note right of Client: 201 Created

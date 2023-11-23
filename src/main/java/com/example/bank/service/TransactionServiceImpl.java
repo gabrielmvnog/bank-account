@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import com.example.bank.exception.UnprocessableEntityException;
@@ -16,8 +15,10 @@ import com.example.bank.model.OperationTypeEnum;
 import com.example.bank.model.dto.TransactionCreateRequestDto;
 import com.example.bank.model.dto.TransactionCreateResponseDto;
 import com.example.bank.model.dto.TransactionDto;
+import com.example.bank.model.entity.Account;
 import com.example.bank.model.entity.OperationType;
 import com.example.bank.model.entity.Transaction;
+import com.example.bank.repository.AccountRepository;
 import com.example.bank.repository.OperationTypeRepository;
 import com.example.bank.repository.TransactionRepository;
 
@@ -33,11 +34,13 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	private OperationTypeRepository operationTypeRepository;
 
-	private void processOperation(TransactionCreateRequestDto transactionCreateRequestDto)
+	@Autowired
+	private AccountRepository accountRepository;
+
+	private OperationType getOperationType(TransactionCreateRequestDto transactionCreateRequestDto)
 			throws UnprocessableEntityException {
 		Optional<OperationType> operationType = operationTypeRepository
 				.findById(transactionCreateRequestDto.getOperationType());
-
 		int compared = transactionCreateRequestDto.getAmount().compareTo(new BigDecimal("0.0"));
 
 		if ((operationType.isEmpty())
@@ -50,6 +53,27 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new UnprocessableEntityException("Unprocesable operation type");
 		}
 
+		return operationType.get();
+	}
+
+	private Account getAccount(TransactionCreateRequestDto transactionCreateRequestDto, OperationType operationType)
+			throws UnprocessableEntityException {
+		Optional<Account> account = accountRepository.findById(transactionCreateRequestDto.getAccountId());
+
+		if (account.isEmpty()) {
+			throw new UnprocessableEntityException("Unprocesable transaction, account not found");
+		}
+
+		if (operationType.getDescription() == OperationTypeEnum.PAYMENT) {
+			return account.get();
+		}
+
+		if (account.get().getAvailableCreditLimit().add(transactionCreateRequestDto.getAmount())
+				.compareTo(new BigDecimal("0.0")) < 0) {
+			throw new UnprocessableEntityException("Unprocesable transaction, limit not enought");
+		}
+
+		return account.get();
 	}
 
 	@Override
@@ -57,13 +81,17 @@ public class TransactionServiceImpl implements TransactionService {
 			throws UnprocessableEntityException {
 		log.debug("Creating transaction with payload: " + transactionCreateRequestDto.toString());
 
-		processOperation(transactionCreateRequestDto);
+		OperationType operationType = getOperationType(transactionCreateRequestDto);
+		Account account = getAccount(transactionCreateRequestDto, operationType);
 
 		Transaction transaction = Transaction.builder().accountId(transactionCreateRequestDto.getAccountId())
 				.operationType(transactionCreateRequestDto.getOperationType())
 				.amount(transactionCreateRequestDto.getAmount()).build();
 
+		account.setAvailableCreditLimit(account.getAvailableCreditLimit().add(transactionCreateRequestDto.getAmount()));
+
 		transactionRepository.save(transaction);
+		accountRepository.save(account);
 
 		log.debug("Successfully created transcation: " + transactionCreateRequestDto.toString());
 
